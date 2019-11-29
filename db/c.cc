@@ -4012,6 +4012,38 @@ char* rocksdb_transactiondb_get_cf(
   return result;
 }
 
+void rocksdb_transactiondb_multi_get(
+    rocksdb_transactiondb_t* txn_db,
+    const rocksdb_readoptions_t* options,
+    size_t num_keys, const char* const* keys_list,
+    const size_t* keys_list_sizes,
+    char** values_list, size_t* values_list_sizes,
+    char** errs) {
+
+    rocksdb_t db;
+    db.rep = txn_db->rep;
+
+    rocksdb_multi_get(&db, options, num_keys, keys_list, keys_list_sizes,
+                      values_list, values_list_sizes, errs);
+}
+
+void rocksdb_transactiondb_multi_get_cf(
+    rocksdb_transactiondb_t* txn_db,
+    const rocksdb_readoptions_t* options,
+    const rocksdb_column_family_handle_t* const* column_families,
+    size_t num_keys, const char* const* keys_list,
+    const size_t* keys_list_sizes,
+    char** values_list, size_t* values_list_sizes,
+    char** errs) {
+
+    rocksdb_t db;
+    db.rep = txn_db->rep;
+
+    rocksdb_multi_get_cf(&db, options, column_families, num_keys, keys_list,
+                         keys_list_sizes, values_list, values_list_sizes,
+                         errs);
+}
+
 // Put a key inside a transaction
 void rocksdb_transaction_put(rocksdb_transaction_t* txn, const char* key,
                              size_t klen, const char* val, size_t vlen,
